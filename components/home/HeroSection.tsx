@@ -31,7 +31,7 @@ export default function HeroSection({ profileImage }: HeroSectionProps) {
           </a>
 
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter mb-6 leading-tight">
-            Crafting <span className="text-primary">Games</span> & Digital Experiences
+            Crafting <span className="text-primary">Digital Experiences</span>
           </h1>
 
           <p className="text-lg md:text-xl text-slate-400 mb-8 max-w-xl leading-relaxed">
