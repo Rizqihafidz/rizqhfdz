@@ -76,7 +76,7 @@ export default function HeroSection({ profileImage }: HeroSectionProps) {
         {/* Profile Image */}
         <div className="order-1 lg:order-2 flex justify-center">
           <div className="relative group">
-            <div className="absolute -inset-1 bg-gradient-to-r from-primary to-blue-600 rounded-3xl blur opacity-25 group-hover:opacity-40 transition duration-1000"></div>
+            <div className="absolute -inset-1 bg-gradient-to-r from-primary to-blue-600 rounded-3xl blur opacity-25 group-hover:opacity-40 transition duration-300"></div>
             <div className="relative w-64 h-64 sm:w-72 sm:h-72 md:w-[480px] md:h-[480px] bg-slate-800 rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
               {isBase64 ? (
                 <img

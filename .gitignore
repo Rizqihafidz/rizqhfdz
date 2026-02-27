@@ -21,6 +21,13 @@ build/
 .claude/
 .gemini/
 
+# Agent Skills (track source but ignore nested git/build artifacts)
+.agents/skills/*/.git/
+.agents/skills/*/node_modules/
+.agents/skills/*/.claude/
+.agents/skills/*/.claude-plugin/
+design-system/
+
 # Environment variables
 .env
 .env.local

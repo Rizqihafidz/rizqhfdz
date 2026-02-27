@@ -33,7 +33,7 @@ function ProjectCard({ project }: { project: Project }) {
           <img
             src={project.cardImage}
             alt={project.title}
-            className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+            className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
           />
         ) : (
           <Image
@@ -41,7 +41,7 @@ function ProjectCard({ project }: { project: Project }) {
             alt={project.title}
             fill
             sizes="(max-width: 768px) 300px, 380px"
-            className="object-cover transition-transform duration-500 group-hover:scale-110"
+            className="object-cover transition-transform duration-300 group-hover:scale-110"
           />
         )}
       </div>

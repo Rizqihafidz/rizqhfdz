@@ -108,7 +108,7 @@ export default function ContactSection() {
             <div className="space-y-6 mb-12">
               <a
                 href="mailto:rizqimaulanahafidz156@gmail.com"
-                className="flex items-center gap-4 group"
+                className="flex items-center gap-4 group cursor-pointer"
               >
                 <div className="size-12 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
                   <MaterialIcon name="mail" />
@@ -125,7 +125,7 @@ export default function ContactSection() {
                 href="https://maps.google.com/?q=Jakarta,Indonesia"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-4 group"
+                className="flex items-center gap-4 group cursor-pointer"
               >
                 <div className="size-12 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
                   <MaterialIcon name="location_on" />

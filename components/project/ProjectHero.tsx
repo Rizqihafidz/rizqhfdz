@@ -15,7 +15,7 @@ export default function ProjectHero({ project }: Props) {
         <img
           src={project.heroImage}
           alt={`${project.title} hero image`}
-          className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+          className="absolute inset-0 w-full h-full object-cover"
         />
       ) : (
         <Image
@@ -26,7 +26,7 @@ export default function ProjectHero({ project }: Props) {
           placeholder="blur"
           blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAQABgDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAABgUH/8QAJBAAAgEDAwQDAQAAAAAAAAAAAQIDBAURAAYhEhMxQRRRYXH/xAAVAQEBAAAAAAAAAAAAAAAAAAAFBv/EAB8RAAIBAwUBAAAAAAAAAAAAAAECAAMRIQQFEjFBYf/aAAwDAQACEQMRAD8AMtG0LVtW7RXa5VFVJHDGzx0sMnajdgAMcHwMgc+M6ltW/Le2re6SZBNHUSGKOplj5hYkAgE8EEeOeNJbu3DV7gu0lxqmVS3CRr4RfwD++z+6P7huNFabdUXCvlSCmp42klkf+VUZJ/Oh0tSm1Vyw4zKKlSiH8S+1xRe5j//Z"
           sizes="100vw"
-          className="object-cover transition-transform duration-700 hover:scale-105"
+          className="object-cover"
         />
       )}
 
