@@ -2,7 +2,8 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireAuth } from '@/lib/auth'
 import { z } from 'zod'
-import { sanitizeHtml, sanitizeText } from '@/lib/sanitize'
+import { sanitizeText } from '@/lib/sanitize'
+import { sanitizeHtmlServer } from '@/lib/sanitize-server'
 import { revalidateProfile } from '@/lib/revalidate'
 
 // Validation schema for profile update
@@ -64,7 +65,7 @@ export async function PUT(request: Request) {
     const { profileImage, aboutBio, aboutCards } = result.data
 
     // Sanitize HTML content (aboutBio can contain rich text)
-    const sanitizedBio = sanitizeHtml(aboutBio)
+    const sanitizedBio = sanitizeHtmlServer(aboutBio)
 
     // Delete old cards and recreate
     await prisma.aboutCard.deleteMany({ where: { profileId: 'singleton' } })

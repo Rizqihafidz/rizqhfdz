@@ -11,6 +11,15 @@ const envSchema = z.object({
     DATABASE_URL: z
         .string()
         .url('DATABASE_URL must be a valid URL'),
+    ADMIN_EMAIL: z
+        .string()
+        .email('ADMIN_EMAIL must be a valid email'),
+    ADMIN_PASSWORD: z
+        .string()
+        .min(8, 'ADMIN_PASSWORD must be at least 8 characters'),
+    RESEND_API_KEY: z
+        .string()
+        .min(1, 'RESEND_API_KEY is required'),
 })
 
 /**

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { Resend } from 'resend'
 import { escapeHtml, sanitizeEmail } from '@/lib/sanitize'
+import { contactRateLimiter, getIp } from '@/lib/rate-limit'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
@@ -12,6 +13,14 @@ const contactSchema = z.object({
 })
 
 export async function POST(request: Request) {
+    const ip = getIp(request)
+    if (!contactRateLimiter.consume(ip)) {
+        return NextResponse.json(
+            { error: 'Too many requests. Please try again later.' },
+            { status: 429 }
+        )
+    }
+
     try {
         const body = await request.json()
 

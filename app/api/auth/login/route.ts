@@ -4,6 +4,7 @@ import { signToken } from '@/lib/auth'
 import bcrypt from 'bcryptjs'
 import { z } from 'zod'
 import { sanitizeEmail, sanitizeText } from '@/lib/sanitize'
+import { loginRateLimiter, getIp } from '@/lib/rate-limit'
 
 // Validation schema for login
 const loginSchema = z.object({
@@ -12,6 +13,11 @@ const loginSchema = z.object({
 })
 
 export async function POST(request: Request) {
+  const ip = getIp(request)
+  if (!loginRateLimiter.consume(ip)) {
+    return NextResponse.json({ error: 'Too many requests. Please try again later.' }, { status: 429 })
+  }
+
   try {
     const body = await request.json()
 

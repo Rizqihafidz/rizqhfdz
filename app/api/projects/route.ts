@@ -4,6 +4,38 @@ import { requireAuth } from '@/lib/auth'
 import { formDataToPrismaInput } from '@/lib/project-transform'
 import { serializeProject, projectInclude } from '@/lib/project-serialize'
 import { revalidateProjects } from '@/lib/revalidate'
+import { z } from 'zod'
+
+const gallerySchema = z.object({
+  previewUrl: z.string(),
+  caption: z.string(),
+});
+
+const mechanicSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  tech: z.string(),
+});
+
+const projectSchema = z.object({
+  title: z.string().min(1),
+  shortDescription: z.string(),
+  tags: z.array(z.string()),
+  type: z.string(),
+  fullDescription: z.string(),
+  techStack: z.array(z.string()),
+  highlights: z.array(z.string()),
+  year: z.string(),
+  role: z.string(),
+  platform: z.string(),
+  status: z.string(),
+  projectLinkUrl: z.string(),
+  githubUrl: z.string(),
+  hasPublication: z.boolean().optional(),
+  publicationUrl: z.string().optional(),
+  gallery: z.array(gallerySchema),
+  mechanics: z.array(mechanicSchema)
+});
 
 export async function GET() {
   try {
@@ -26,7 +58,12 @@ export async function POST(request: Request) {
 
   try {
     const data = await request.json()
-    const input = formDataToPrismaInput(data)
+    const result = projectSchema.safeParse(data)
+    if (!result.success) {
+      return NextResponse.json({ error: 'Validation failed', details: result.error.issues }, { status: 400 })
+    }
+
+    const input = formDataToPrismaInput(result.data as any)
 
     const project = await prisma.project.create({
       data: {
