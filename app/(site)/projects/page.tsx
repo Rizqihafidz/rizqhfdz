@@ -10,6 +10,8 @@ export const metadata: Metadata = {
     'Browse through all of my projects — game development, web development, and more.',
 }
 
+export const revalidate = 0
+
 export default async function AllProjectsPage() {
   const dbProjects = await prisma.project.findMany({
     include: projectInclude,
@@ -60,8 +62,8 @@ export default async function AllProjectsPage() {
                   {/* Type Badge */}
                   <span
                     className={`absolute bottom-3 left-3 z-20 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-white backdrop-blur-sm ${project.type === 'game'
-                        ? 'bg-red-500/80'
-                        : 'bg-emerald-500/80'
+                      ? 'bg-red-500/80'
+                      : 'bg-emerald-500/80'
                       }`}
                   >
                     {project.type === 'game'

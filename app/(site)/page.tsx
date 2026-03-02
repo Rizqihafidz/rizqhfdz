@@ -6,6 +6,8 @@ import TechStackSection from '@/components/home/TechStackSection'
 import ProjectsSection from '@/components/home/ProjectsSection'
 import ContactSection from '@/components/home/ContactSection'
 
+export const revalidate = 0
+
 export default async function HomePage() {
   const [dbProjects, profile] = await Promise.all([
     prisma.project.findMany({
