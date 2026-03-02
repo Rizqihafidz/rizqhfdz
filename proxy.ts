@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
     // Allow GET requests through — these are public reads used by ISR pages
     if (request.method === 'GET') {
         return NextResponse.next()
