@@ -4,8 +4,6 @@ import { Resend } from 'resend'
 import { escapeHtml, sanitizeEmail } from '@/lib/sanitize'
 import { contactRateLimiter, getIp } from '@/lib/rate-limit'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
-
 const contactSchema = z.object({
     name: z.string().min(2, 'Name must be at least 2 characters').max(100),
     email: z.string().email('Invalid email address').max(254),
@@ -32,6 +30,9 @@ export async function POST(request: Request) {
                 { status: 400 }
             )
         }
+
+        // Initialize Resend client lazily (not at module level) to avoid build-time errors
+        const resend = new Resend(process.env.RESEND_API_KEY)
 
         // Sanitize input to prevent XSS
         const name = escapeHtml(result.data.name.trim())
