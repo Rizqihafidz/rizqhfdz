@@ -15,11 +15,17 @@ interface PageProps {
     params: Promise<{ slug: string }>
 }
 
-export const revalidate = 0
+export const dynamic = 'force-dynamic'
 
 export async function generateStaticParams() {
-    const projects = await prisma.project.findMany({ select: { slug: true } })
-    return projects.map((p) => ({ slug: p.slug }))
+    try {
+        const projects = await prisma.project.findMany({ select: { slug: true } })
+        return projects.map((p) => ({ slug: p.slug }))
+    } catch {
+        // During Docker build, database is not available.
+        // Return empty array so pages are generated on-demand at runtime.
+        return []
+    }
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {

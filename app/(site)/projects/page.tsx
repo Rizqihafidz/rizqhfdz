@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     'Browse through all of my projects — game development, web development, and more.',
 }
 
-export const revalidate = 0
+export const dynamic = 'force-dynamic'
 
 export default async function AllProjectsPage() {
   const dbProjects = await prisma.project.findMany({
