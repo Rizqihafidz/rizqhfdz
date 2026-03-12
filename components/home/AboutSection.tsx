@@ -67,10 +67,10 @@ export default function AboutSection({ data }: Props) {
               return (
                 <div
                   key={card.title}
-                  className="relative p-8 rounded-2xl bg-slate-800/50 border border-white/5 shadow-sm group hover:shadow-lg transition-all overflow-hidden"
+                  className="relative p-8 rounded-2xl bg-slate-800/50 border border-white/5 shadow-sm overflow-hidden"
                 >
-                  {/* Gradient border on hover */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-0 group-hover:opacity-10 transition-opacity`} />
+                  {/* Subtle gradient accent */}
+                  <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-[0.03]`} />
                   <div className="relative z-10">
                     <div className="flex items-center gap-3 mb-3">
                       <MaterialIcon name={card.icon} className="text-3xl text-primary" />

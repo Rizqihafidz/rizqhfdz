@@ -117,7 +117,7 @@ export default function Navbar() {
                         <a
                             href="/assets/resume.pdf"
                             download
-                            className="hidden lg:flex px-5 py-2.5 bg-primary hover:bg-primary/90 text-white text-sm font-bold rounded-lg transition-all shadow-lg shadow-primary/25 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                            className="hidden md:flex px-5 py-2.5 bg-primary hover:bg-primary/90 text-white text-sm font-bold rounded-lg transition-all shadow-lg shadow-primary/25 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                             aria-label="Download my resume in PDF format"
                         >
                             Download CV

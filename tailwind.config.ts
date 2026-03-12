@@ -10,7 +10,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#13a4ec',
+        primary: '#3BB5F5',
         accent: '#f43f5e',
         'background-light': '#f8fafc',
         'background-dark': '#101c22',

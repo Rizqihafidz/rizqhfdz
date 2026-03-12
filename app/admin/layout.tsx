@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { AuthProvider, useAuth } from '@/context/AuthContext'
 import { AdminDataProvider } from '@/context/AdminDataContext'
+import { ToastProvider } from '@/components/admin/ui/AdminToast'
 import AdminSidebar from '@/components/admin/layout/AdminSidebar'
 import AdminHeader from '@/components/admin/layout/AdminHeader'
 
@@ -43,7 +44,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <AuthProvider>
       <AdminDataProvider>
-        <AdminGuard>{children}</AdminGuard>
+        <ToastProvider>
+          <AdminGuard>{children}</AdminGuard>
+        </ToastProvider>
       </AdminDataProvider>
     </AuthProvider>
   )

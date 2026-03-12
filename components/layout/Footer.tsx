@@ -62,7 +62,7 @@ export default function Footer() {
                                     href={social.href}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className={`text-slate-500 ${social.hoverColor} transition-colors cursor-pointer`}
+                                    className={`p-2 text-slate-500 ${social.hoverColor} transition-colors cursor-pointer`}
                                     aria-label={social.label}
                                 >
                                     <social.icon className="text-xl" />

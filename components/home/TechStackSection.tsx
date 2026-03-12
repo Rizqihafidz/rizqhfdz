@@ -37,9 +37,9 @@ export default function TechStackSection() {
           {techItems.map((item) => (
             <div
               key={item.name}
-              className="flex flex-col items-center p-6 rounded-2xl bg-slate-800/50 border border-transparent hover:border-primary/30 transition-all group"
+              className="flex flex-col items-center p-6 rounded-2xl bg-slate-800/50 border border-white/5"
             >
-              <div className="size-16 rounded-xl bg-slate-700 flex items-center justify-center mb-4 shadow-sm group-hover:shadow-lg group-hover:shadow-primary/20 group-hover:bg-slate-600 transition-all">
+              <div className="size-16 rounded-xl bg-slate-700 flex items-center justify-center mb-4 shadow-sm">
                 <item.icon
                   className="text-3xl transition-colors"
                   style={{ color: item.color }}

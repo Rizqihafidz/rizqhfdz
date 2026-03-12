@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import MaterialIcon from '@/components/ui/MaterialIcon'
+import PasswordInput from '@/components/ui/PasswordInput'
 
 const inputClass =
   'w-full px-5 py-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all'
@@ -111,26 +112,28 @@ export default function SettingsPage() {
       </div>
 
       {/* Change Email */}
-      <div className={sectionClass}>
+      <form className={sectionClass} onSubmit={(e) => { e.preventDefault(); handleChangeEmail() }}>
         <h2 className="text-lg font-bold">Change Email</h2>
         <div>
-          <label className="block text-sm font-medium mb-1">Current Password</label>
-          <input
-            type="password"
+          <label htmlFor="settings-email-password" className="block text-sm font-medium mb-1">Current Password</label>
+          <PasswordInput
+            id="settings-email-password"
             value={emailPassword}
             onChange={(e) => setEmailPassword(e.target.value)}
             placeholder="Enter current password"
-            className={inputClass}
+            disabled={emailLoading}
           />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">New Email</label>
+          <label htmlFor="settings-new-email" className="block text-sm font-medium mb-1">New Email</label>
           <input
+            id="settings-new-email"
             type="email"
             value={newEmail}
             onChange={(e) => setNewEmail(e.target.value)}
             placeholder="Enter new email"
             className={inputClass}
+            disabled={emailLoading}
           />
         </div>
         {emailMessage && (
@@ -140,7 +143,7 @@ export default function SettingsPage() {
         )}
         <div className="flex justify-end">
           <button
-            onClick={handleChangeEmail}
+            type="submit"
             disabled={emailLoading}
             className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/25 hover:scale-[1.02] active:scale-[0.98] transition-all text-sm disabled:opacity-50 disabled:cursor-not-allowed"
           >
@@ -148,39 +151,39 @@ export default function SettingsPage() {
             {emailLoading ? 'Updating...' : 'Update Email'}
           </button>
         </div>
-      </div>
+      </form>
 
       {/* Change Password */}
-      <div className={sectionClass}>
+      <form className={sectionClass} onSubmit={(e) => { e.preventDefault(); handleChangePassword() }}>
         <h2 className="text-lg font-bold">Change Password</h2>
         <div>
-          <label className="block text-sm font-medium mb-1">Current Password</label>
-          <input
-            type="password"
+          <label htmlFor="settings-current-password" className="block text-sm font-medium mb-1">Current Password</label>
+          <PasswordInput
+            id="settings-current-password"
             value={passCurrentPassword}
             onChange={(e) => setPassCurrentPassword(e.target.value)}
             placeholder="Enter current password"
-            className={inputClass}
+            disabled={passLoading}
           />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">New Password</label>
-          <input
-            type="password"
+          <label htmlFor="settings-new-password" className="block text-sm font-medium mb-1">New Password</label>
+          <PasswordInput
+            id="settings-new-password"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
             placeholder="Minimum 6 characters"
-            className={inputClass}
+            disabled={passLoading}
           />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">Confirm New Password</label>
-          <input
-            type="password"
+          <label htmlFor="settings-confirm-password" className="block text-sm font-medium mb-1">Confirm New Password</label>
+          <PasswordInput
+            id="settings-confirm-password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             placeholder="Re-enter new password"
-            className={inputClass}
+            disabled={passLoading}
           />
         </div>
         {passMessage && (
@@ -190,7 +193,7 @@ export default function SettingsPage() {
         )}
         <div className="flex justify-end">
           <button
-            onClick={handleChangePassword}
+            type="submit"
             disabled={passLoading}
             className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/25 hover:scale-[1.02] active:scale-[0.98] transition-all text-sm disabled:opacity-50 disabled:cursor-not-allowed"
           >
@@ -198,7 +201,7 @@ export default function SettingsPage() {
             {passLoading ? 'Updating...' : 'Update Password'}
           </button>
         </div>
-      </div>
+      </form>
     </div>
   )
 }

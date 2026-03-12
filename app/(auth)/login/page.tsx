@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/AuthContext'
 import MaterialIcon from '@/components/ui/MaterialIcon'
+import PasswordInput from '@/components/ui/PasswordInput'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -73,13 +74,12 @@ export default function LoginPage() {
               <label htmlFor="password" className="block text-sm font-bold mb-2">
                 Password
               </label>
-              <input
+              <PasswordInput
                 id="password"
-                type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter your password"
-                className="w-full px-5 py-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                disabled={submitting}
               />
             </div>
 

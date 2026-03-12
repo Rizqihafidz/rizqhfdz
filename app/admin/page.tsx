@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useAdminData } from '@/context/AdminDataContext'
+import { getTypeBadgeClass } from '@/lib/utils'
 import MaterialIcon from '@/components/ui/MaterialIcon'
 
 export default function AdminDashboard() {
@@ -84,16 +85,13 @@ export default function AdminDashboard() {
                   src={project.cardImage}
                   alt={project.title}
                   className="w-12 h-12 rounded-lg object-cover flex-shrink-0"
+                  loading="lazy"
                 />
                 <div className="flex-1 min-w-0">
                   <p className="font-bold text-sm truncate">{project.title}</p>
                   <div className="flex items-center gap-2 mt-0.5">
                     <span
-                      className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full ${
-                        project.type === 'game'
-                          ? 'bg-red-500/10 text-red-500'
-                          : 'bg-emerald-500/10 text-emerald-500'
-                      }`}
+                      className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full ${getTypeBadgeClass(project.type, 'inline')}`}
                     >
                       {project.type}
                     </span>

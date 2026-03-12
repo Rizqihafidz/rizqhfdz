@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { useAdminData } from '@/context/AdminDataContext'
+import { useToast } from '@/components/admin/ui/AdminToast'
 import MaterialIcon from '@/components/ui/MaterialIcon'
 import RichTextEditor from '@/components/admin/ui/RichTextEditor'
 import IconSelector from '@/components/admin/ui/IconSelector'
@@ -9,6 +10,7 @@ import type { AboutCard } from '@/types'
 
 export default function ProfilePage() {
   const { profileImage, aboutBio, aboutCards, isLoading, updateProfile } = useAdminData()
+  const { showToast } = useToast()
 
   const [image, setImage] = useState('')
   const [bio, setBio] = useState('')
@@ -57,9 +59,10 @@ export default function ProfilePage() {
     try {
       await updateProfile(image, bio, cards)
       setSaved(true)
+      showToast('Profile saved successfully!', 'success')
       setTimeout(() => setSaved(false), 2000)
     } catch {
-      // handle silently
+      showToast('Failed to save profile. Please try again.', 'error')
     } finally {
       setSaving(false)
     }
@@ -175,6 +178,7 @@ export default function ProfilePage() {
                 />
               </div>
               <input
+                id={`card-title-${i}`}
                 value={card.title}
                 onChange={(e) => {
                   const next = [...cards]
@@ -182,9 +186,11 @@ export default function ProfilePage() {
                   setCards(next)
                 }}
                 placeholder="Title"
+                aria-label={`Card ${i + 1} title`}
                 className="w-full px-3 py-2 text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none font-bold"
               />
               <textarea
+                id={`card-desc-${i}`}
                 value={card.description}
                 onChange={(e) => {
                   const next = [...cards]
@@ -193,6 +199,7 @@ export default function ProfilePage() {
                 }}
                 rows={2}
                 placeholder="Description"
+                aria-label={`Card ${i + 1} description`}
                 className="w-full px-3 py-2 text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none resize-none"
               />
             </div>

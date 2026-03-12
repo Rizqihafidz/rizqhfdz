@@ -435,7 +435,8 @@ export default function ProjectForm({ initialData, editSlug }: Props) {
         </button>
         <button
           onClick={handleSubmit}
-          className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/25 hover:scale-[1.02] active:scale-[0.98] transition-all text-sm"
+          disabled={submitting}
+          className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/25 hover:scale-[1.02] active:scale-[0.98] transition-all text-sm disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <MaterialIcon name={saved ? 'check' : 'save'} className="text-xl" />
           {submitting ? 'Saving...' : saved ? 'Saved!' : isEdit ? 'Update Project' : 'Create Project'}
