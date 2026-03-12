@@ -12,6 +12,7 @@ WORKDIR /app
 
 COPY package.json package-lock.json ./
 COPY prisma ./prisma/
+COPY prisma.config.ts ./
 
 RUN npm ci
 
@@ -49,9 +50,10 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 # Copy Prisma files for runtime migrations
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/generated/prisma ./generated/prisma
+COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
 
-# Install Prisma CLI for running migrations on deploy
-RUN npm install -g prisma@7
+# Install Prisma CLI + dotenv (needed by prisma.config.ts) for running migrations on deploy
+RUN npm install -g prisma@7 dotenv
 
 # Copy entrypoint script
 COPY --chmod=755 <<'EOF' /app/entrypoint.sh
