@@ -1,15 +1,18 @@
-import Image from 'next/image'
-import { FaLinkedin, FaGithub } from 'react-icons/fa6'
+import Image from "next/image";
+import { FaLinkedin, FaGithub } from "react-icons/fa6";
 
 interface HeroSectionProps {
-  profileImage?: string
+  profileImage?: string;
 }
 
 export default function HeroSection({ profileImage }: HeroSectionProps) {
-  const imageSrc = profileImage || '/assets/profile-pic.jpeg'
-  const isBase64 = imageSrc.startsWith('data:')
+  const imageSrc = profileImage || "/assets/profile-pic.jpeg";
+  const isBase64 = imageSrc.startsWith("data:");
   return (
-    <section className="relative min-h-screen md:min-h-0 flex items-center overflow-hidden px-6 py-20 md:pt-32 md:pb-20" id="home">
+    <section
+      className="relative min-h-screen md:min-h-0 flex items-center overflow-hidden px-6 py-20 md:pt-32 md:pb-20"
+      id="home"
+    >
       {/* Background gradient blobs */}
       <div className="absolute inset-0 z-0">
         <div className="absolute top-1/4 -right-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[120px]"></div>
@@ -27,7 +30,9 @@ export default function HeroSection({ profileImage }: HeroSectionProps) {
               <span className="animate-pulse absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
             </span>
-            <span className="text-xs font-bold uppercase tracking-wider">Open to Work</span>
+            <span className="text-xs font-bold uppercase tracking-wider">
+              Open to Work
+            </span>
           </a>
 
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter mb-6 leading-tight">
@@ -35,8 +40,8 @@ export default function HeroSection({ profileImage }: HeroSectionProps) {
           </h1>
 
           <p className="text-lg md:text-xl text-slate-400 mb-8 max-w-xl leading-relaxed">
-            Informatics Engineering Graduate from Brawijaya University. Specialized in game
-            development with Unity & C# with a published thesis on dynamic difficulty adjustment and web development with Next.js, React, and Tailwind CSS.
+            Informatics Engineering Graduate from Brawijaya University.
+            Specialized in web development and game development.
           </p>
 
           {/* Buttons - Stack on mobile */}
@@ -101,5 +106,5 @@ export default function HeroSection({ profileImage }: HeroSectionProps) {
         </div>
       </div>
     </section>
-  )
+  );
 }
