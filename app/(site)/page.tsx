@@ -36,7 +36,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <HeroSection profileImage={aboutData?.profileImage} />
+      <HeroSection profileImage={aboutData?.profileImage} description={profile?.heroDescription} />
       <AboutSection data={aboutData} />
       <ProjectsSection projects={projects} />
       <TechStackSection />

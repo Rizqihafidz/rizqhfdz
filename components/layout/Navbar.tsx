@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import MaterialIcon from '@/components/ui/MaterialIcon'
+import CvDownloadButton from '@/components/layout/CvDownloadButton'
 
 const NAV_LINKS = [
     { label: 'Home', href: 'home' },
@@ -114,14 +115,12 @@ export default function Navbar() {
 
                     {/* Right side */}
                     <div className="flex items-center gap-3">
-                        <a
-                            href="/assets/resume.pdf"
-                            download
-                            className="hidden md:flex px-5 py-2.5 bg-primary hover:bg-primary/90 text-white text-sm font-bold rounded-lg transition-all shadow-lg shadow-primary/25 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-                            aria-label="Download my resume in PDF format"
+                        <CvDownloadButton
+                            className="hidden md:flex items-center px-5 py-2.5 bg-primary hover:bg-primary/90 text-white text-sm font-bold rounded-lg transition-all shadow-lg shadow-primary/25 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                            ariaLabel="Download my resume in PDF format"
                         >
                             Download CV
-                        </a>
+                        </CvDownloadButton>
                         {/* Mobile hamburger */}
                         <button
                             className="md:hidden size-10 flex items-center justify-center rounded-lg hover:bg-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
@@ -164,14 +163,12 @@ export default function Navbar() {
                             {link.label}
                         </a>
                     ))}
-                    <a
-                        href="/assets/resume.pdf"
-                        download
+                    <CvDownloadButton
                         className="mt-4 px-8 py-4 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/25"
-                        onClick={handleNavClick}
+                        onSelect={handleNavClick}
                     >
                         Download CV
-                    </a>
+                    </CvDownloadButton>
                 </div>
             </div>
         </>

@@ -16,11 +16,14 @@ model Admin {
 }
 
 model Profile {
-  id           String      @id @default("singleton")
-  profileImage String      @default("/assets/profile-pic.jpeg")
-  aboutBio     String      @db.Text
-  updatedAt    DateTime    @updatedAt
-  aboutCards   AboutCard[]
+  id              String      @id @default("singleton")
+  profileImage    String      @default("/assets/profile-pic.jpeg")
+  heroDescription String      @default("Informatics Engineering Graduate from Brawijaya University. Specialized in web development and game development.") @db.Text
+  aboutBio        String      @db.Text
+  resumeEn        String?     @db.Text
+  resumeId        String?     @db.Text
+  updatedAt       DateTime    @updatedAt
+  aboutCards      AboutCard[]
 }
 
 model AboutCard {

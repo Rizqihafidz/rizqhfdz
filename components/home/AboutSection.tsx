@@ -49,7 +49,7 @@ export default function AboutSection({ data }: Props) {
             <h2 className="text-4xl font-black mb-8 tracking-tight">About Me</h2>
             <SafeHtml
               html={bio}
-              className="space-y-4 text-lg text-slate-400 leading-relaxed"
+              className="space-y-4 text-lg text-slate-400 leading-relaxed text-justify"
             />
           </div>
 

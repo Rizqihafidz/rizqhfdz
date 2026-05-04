@@ -3,11 +3,16 @@ import { FaLinkedin, FaGithub } from "react-icons/fa6";
 
 interface HeroSectionProps {
   profileImage?: string;
+  description?: string;
 }
 
-export default function HeroSection({ profileImage }: HeroSectionProps) {
+const DEFAULT_DESCRIPTION =
+  "Informatics Engineering Graduate from Brawijaya University. Specialized in web development and game development.";
+
+export default function HeroSection({ profileImage, description }: HeroSectionProps) {
   const imageSrc = profileImage || "/assets/profile-pic.jpeg";
   const isBase64 = imageSrc.startsWith("data:");
+  const heroText = description?.trim() || DEFAULT_DESCRIPTION;
   return (
     <section
       className="relative min-h-screen md:min-h-0 flex items-center overflow-hidden px-6 py-20 md:pt-32 md:pb-20"
@@ -39,9 +44,8 @@ export default function HeroSection({ profileImage }: HeroSectionProps) {
             Crafting <span className="text-primary">Digital Experiences</span>
           </h1>
 
-          <p className="text-lg md:text-xl text-slate-400 mb-8 max-w-xl leading-relaxed">
-            Informatics Engineering Graduate from Brawijaya University.
-            Specialized in web development and game development.
+          <p className="text-lg md:text-xl text-slate-400 mb-8 max-w-xl leading-relaxed whitespace-pre-line">
+            {heroText}
           </p>
 
           {/* Buttons - Stack on mobile */}

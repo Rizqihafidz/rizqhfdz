@@ -8,25 +8,54 @@ import RichTextEditor from '@/components/admin/ui/RichTextEditor'
 import IconSelector from '@/components/admin/ui/IconSelector'
 import type { AboutCard } from '@/types'
 
+const RESUME_MAX_BYTES = 5 * 1024 * 1024 // 5 MB raw PDF cap
+
+interface ResumeFileState {
+  base64: string
+  filename: string
+  size: number
+}
+
+const HERO_DESCRIPTION_MAX = 500
+
 export default function ProfilePage() {
-  const { profileImage, aboutBio, aboutCards, isLoading, updateProfile } = useAdminData()
+  const {
+    profileImage,
+    heroDescription,
+    aboutBio,
+    aboutCards,
+    hasResumeEn,
+    hasResumeId,
+    isLoading,
+    updateProfile,
+  } = useAdminData()
   const { showToast } = useToast()
 
   const [image, setImage] = useState('')
+  const [hero, setHero] = useState('')
   const [bio, setBio] = useState('')
   const [cards, setCards] = useState<AboutCard[]>([])
   const [saved, setSaved] = useState(false)
   const [saving, setSaving] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
 
+  // Resume state — only set when admin uploads in this session
+  const [resumeEn, setResumeEn] = useState<ResumeFileState | null>(null)
+  const [resumeId, setResumeId] = useState<ResumeFileState | null>(null)
+  const [removeResumeEn, setRemoveResumeEn] = useState(false)
+  const [removeResumeId, setRemoveResumeId] = useState(false)
+  const resumeEnRef = useRef<HTMLInputElement>(null)
+  const resumeIdRef = useRef<HTMLInputElement>(null)
+
   // Sync state when context data loads
   useEffect(() => {
     if (!isLoading) {
       setImage(profileImage)
+      setHero(heroDescription)
       setBio(aboutBio)
       setCards(aboutCards.map((c) => ({ ...c })))
     }
-  }, [isLoading, profileImage, aboutBio, aboutCards])
+  }, [isLoading, profileImage, heroDescription, aboutBio, aboutCards])
 
   const convertToBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -54,10 +83,47 @@ export default function ProfilePage() {
     }
   }
 
+  const handleResumeUpload = async (
+    file: File | undefined,
+    lang: 'en' | 'id',
+  ) => {
+    if (!file) return
+    if (file.type !== 'application/pdf') {
+      showToast('Resume must be a PDF file', 'error')
+      return
+    }
+    if (file.size > RESUME_MAX_BYTES) {
+      showToast(`File too large. Max ${RESUME_MAX_BYTES / 1024 / 1024} MB.`, 'error')
+      return
+    }
+    const base64 = await convertToBase64(file)
+    const state: ResumeFileState = { base64, filename: file.name, size: file.size }
+    if (lang === 'en') {
+      setResumeEn(state)
+      setRemoveResumeEn(false)
+    } else {
+      setResumeId(state)
+      setRemoveResumeId(false)
+    }
+  }
+
   const handleSave = async () => {
     setSaving(true)
     try {
-      await updateProfile(image, bio, cards)
+      await updateProfile({
+        image,
+        heroDescription: hero,
+        bio,
+        cards,
+        resumeEn: resumeEn ? resumeEn.base64 : removeResumeEn ? '' : undefined,
+        resumeId: resumeId ? resumeId.base64 : removeResumeId ? '' : undefined,
+      })
+      setResumeEn(null)
+      setResumeId(null)
+      setRemoveResumeEn(false)
+      setRemoveResumeId(false)
+      if (resumeEnRef.current) resumeEnRef.current.value = ''
+      if (resumeIdRef.current) resumeIdRef.current.value = ''
       setSaved(true)
       showToast('Profile saved successfully!', 'success')
       setTimeout(() => setSaved(false), 2000)
@@ -68,7 +134,6 @@ export default function ProfilePage() {
     }
   }
 
-  // Show loading state
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -85,7 +150,7 @@ export default function ProfilePage() {
       <div>
         <h1 className="text-3xl font-black mb-2">Profile Settings</h1>
         <p className="text-slate-500 dark:text-slate-400">
-          Update your profile image and about section content.
+          Update your profile image, about section, and CV files.
         </p>
       </div>
 
@@ -122,6 +187,79 @@ export default function ProfilePage() {
               className="hidden"
             />
           </div>
+        </div>
+      </div>
+
+      {/* Hero Description */}
+      <div className="p-6 rounded-2xl bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-white/5 shadow-sm space-y-4">
+        <div>
+          <h2 className="text-lg font-bold">Hero Description</h2>
+          <p className="text-sm text-slate-400 dark:text-slate-500 mt-1">
+            Short paragraph shown under the headline on the homepage hero. Plain text only.
+          </p>
+        </div>
+        <textarea
+          value={hero}
+          onChange={(e) => setHero(e.target.value.slice(0, HERO_DESCRIPTION_MAX))}
+          rows={3}
+          maxLength={HERO_DESCRIPTION_MAX}
+          placeholder="e.g. Informatics Engineering Graduate from Brawijaya University..."
+          className="w-full px-4 py-3 text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none resize-none leading-relaxed"
+        />
+        <div className="flex justify-end">
+          <span className="text-xs text-slate-400 dark:text-slate-500">
+            {hero.length} / {HERO_DESCRIPTION_MAX}
+          </span>
+        </div>
+      </div>
+
+      {/* CV Files */}
+      <div className="p-6 rounded-2xl bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-white/5 shadow-sm space-y-4">
+        <div>
+          <h2 className="text-lg font-bold">CV Files</h2>
+          <p className="text-sm text-slate-400 dark:text-slate-500 mt-1">
+            Upload your resume in PDF format for each language. Max 5 MB per file.
+          </p>
+        </div>
+        <div className="grid md:grid-cols-2 gap-4">
+          <ResumeUploadCard
+            label="English CV"
+            sublabel="Resume in English"
+            inputRef={resumeEnRef}
+            uploaded={resumeEn}
+            existing={hasResumeEn && !removeResumeEn}
+            removed={removeResumeEn}
+            onUpload={(file) => handleResumeUpload(file, 'en')}
+            onClear={() => {
+              setResumeEn(null)
+              if (resumeEnRef.current) resumeEnRef.current.value = ''
+            }}
+            onRemoveExisting={() => {
+              setRemoveResumeEn(true)
+              setResumeEn(null)
+              if (resumeEnRef.current) resumeEnRef.current.value = ''
+            }}
+            onUndoRemove={() => setRemoveResumeEn(false)}
+          />
+          <ResumeUploadCard
+            label="Indonesian CV"
+            sublabel="Resume in Bahasa Indonesia"
+            inputRef={resumeIdRef}
+            uploaded={resumeId}
+            existing={hasResumeId && !removeResumeId}
+            removed={removeResumeId}
+            onUpload={(file) => handleResumeUpload(file, 'id')}
+            onClear={() => {
+              setResumeId(null)
+              if (resumeIdRef.current) resumeIdRef.current.value = ''
+            }}
+            onRemoveExisting={() => {
+              setRemoveResumeId(true)
+              setResumeId(null)
+              if (resumeIdRef.current) resumeIdRef.current.value = ''
+            }}
+            onUndoRemove={() => setRemoveResumeId(false)}
+          />
         </div>
       </div>
 
@@ -217,12 +355,142 @@ export default function ProfilePage() {
       <div className="flex justify-end">
         <button
           onClick={handleSave}
-          className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/25 hover:scale-[1.02] active:scale-[0.98] transition-all"
+          disabled={saving}
+          className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/25 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
         >
           <MaterialIcon name={saved ? 'check' : 'save'} className="text-xl" />
           {saving ? 'Saving...' : saved ? 'Saved!' : 'Save Changes'}
         </button>
       </div>
+    </div>
+  )
+}
+
+interface ResumeUploadCardProps {
+  label: string
+  sublabel: string
+  inputRef: React.RefObject<HTMLInputElement | null>
+  uploaded: ResumeFileState | null
+  existing: boolean
+  removed: boolean
+  onUpload: (file: File | undefined) => void
+  onClear: () => void
+  onRemoveExisting: () => void
+  onUndoRemove: () => void
+}
+
+function ResumeUploadCard({
+  label,
+  sublabel,
+  inputRef,
+  uploaded,
+  existing,
+  removed,
+  onUpload,
+  onClear,
+  onRemoveExisting,
+  onUndoRemove,
+}: ResumeUploadCardProps) {
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    const file = e.dataTransfer.files[0]
+    if (file?.type === 'application/pdf') {
+      onUpload(file)
+    }
+  }
+
+  const formatBytes = (bytes: number) => {
+    if (bytes < 1024) return `${bytes} B`
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
+    return `${(bytes / 1024 / 1024).toFixed(2)} MB`
+  }
+
+  return (
+    <div className="border border-slate-200 dark:border-white/10 rounded-xl p-4 space-y-3">
+      <div className="flex items-center justify-between gap-2">
+        <div>
+          <h3 className="font-bold text-sm">{label}</h3>
+          <p className="text-xs text-slate-500 dark:text-slate-400">{sublabel}</p>
+        </div>
+        {uploaded ? (
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-500 text-[10px] font-bold uppercase">
+            <MaterialIcon name="upload_file" className="text-sm" />
+            New
+          </span>
+        ) : existing ? (
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-green-500/10 text-green-500 text-[10px] font-bold uppercase">
+            <MaterialIcon name="check_circle" className="text-sm" />
+            Uploaded
+          </span>
+        ) : removed ? (
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-red-500/10 text-red-500 text-[10px] font-bold uppercase">
+            <MaterialIcon name="delete" className="text-sm" />
+            Will remove
+          </span>
+        ) : (
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-500 text-[10px] font-bold uppercase">
+            None
+          </span>
+        )}
+      </div>
+
+      <div
+        onDrop={handleDrop}
+        onDragOver={(e) => e.preventDefault()}
+        onClick={() => inputRef.current?.click()}
+        className="border-2 border-dashed border-slate-300 dark:border-slate-600 hover:border-primary rounded-lg p-5 text-center cursor-pointer transition-colors"
+      >
+        <MaterialIcon name="picture_as_pdf" className="text-3xl text-slate-400 block mx-auto mb-1" />
+        <p className="text-xs text-slate-500 dark:text-slate-400">
+          {uploaded ? 'Click to replace' : 'Drag & drop a PDF, or click to browse'}
+        </p>
+        <input
+          ref={inputRef}
+          type="file"
+          accept="application/pdf"
+          onChange={(e) => onUpload(e.target.files?.[0])}
+          className="hidden"
+        />
+      </div>
+
+      {uploaded && (
+        <div className="flex items-center justify-between gap-2 px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-900/40">
+          <div className="min-w-0">
+            <p className="text-xs font-bold truncate">{uploaded.filename}</p>
+            <p className="text-[10px] text-slate-500">{formatBytes(uploaded.size)} — pending save</p>
+          </div>
+          <button
+            type="button"
+            onClick={onClear}
+            className="p-1.5 text-slate-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors"
+            title="Cancel upload"
+          >
+            <MaterialIcon name="close" className="text-lg" />
+          </button>
+        </div>
+      )}
+
+      {!uploaded && existing && (
+        <button
+          type="button"
+          onClick={onRemoveExisting}
+          className="inline-flex items-center gap-1 text-xs font-medium text-red-500 hover:text-red-600 transition-colors"
+        >
+          <MaterialIcon name="delete" className="text-base" />
+          Remove uploaded file
+        </button>
+      )}
+
+      {removed && (
+        <button
+          type="button"
+          onClick={onUndoRemove}
+          className="inline-flex items-center gap-1 text-xs font-medium text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors"
+        >
+          <MaterialIcon name="undo" className="text-base" />
+          Undo remove
+        </button>
+      )}
     </div>
   )
 }

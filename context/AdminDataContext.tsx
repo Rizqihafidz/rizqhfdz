@@ -3,16 +3,28 @@
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react'
 import type { Project, AboutCard, ProjectFormData } from '@/types'
 
+interface ProfileUpdateInput {
+  image: string
+  heroDescription: string
+  bio: string
+  cards: AboutCard[]
+  resumeEn?: string
+  resumeId?: string
+}
+
 interface AdminDataContextType {
   projects: Project[]
   profileImage: string
+  heroDescription: string
   aboutBio: string
   aboutCards: AboutCard[]
+  hasResumeEn: boolean
+  hasResumeId: boolean
   isLoading: boolean
   addProject: (data: ProjectFormData) => Promise<void>
   updateProject: (slug: string, data: ProjectFormData) => Promise<void>
   deleteProject: (slug: string) => Promise<void>
-  updateProfile: (image: string, bio: string, cards: AboutCard[]) => Promise<void>
+  updateProfile: (input: ProfileUpdateInput) => Promise<void>
 }
 
 const AdminDataContext = createContext<AdminDataContextType | undefined>(undefined)
@@ -20,8 +32,11 @@ const AdminDataContext = createContext<AdminDataContextType | undefined>(undefin
 export function AdminDataProvider({ children }: { children: ReactNode }) {
   const [projects, setProjects] = useState<Project[]>([])
   const [profileImage, setProfileImage] = useState('/assets/profile-pic.jpeg')
+  const [heroDescription, setHeroDescription] = useState('')
   const [aboutBio, setAboutBio] = useState('')
   const [aboutCards, setAboutCards] = useState<AboutCard[]>([])
+  const [hasResumeEn, setHasResumeEn] = useState(false)
+  const [hasResumeId, setHasResumeId] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
 
   const fetchProjects = useCallback(async () => {
@@ -42,8 +57,11 @@ export function AdminDataProvider({ children }: { children: ReactNode }) {
       if (res.ok) {
         const data = await res.json()
         setProfileImage(data.profileImage)
+        setHeroDescription(data.heroDescription || '')
         setAboutBio(data.aboutBio)
         setAboutCards(data.aboutCards)
+        setHasResumeEn(Boolean(data.hasResumeEn))
+        setHasResumeId(Boolean(data.hasResumeId))
       }
     } catch {
       // keep current state
@@ -80,11 +98,20 @@ export function AdminDataProvider({ children }: { children: ReactNode }) {
     await fetchProjects()
   }, [fetchProjects])
 
-  const updateProfile = useCallback(async (image: string, bio: string, cards: AboutCard[]) => {
+  const updateProfile = useCallback(async ({ image, heroDescription, bio, cards, resumeEn, resumeId }: ProfileUpdateInput) => {
+    const payload: Record<string, unknown> = {
+      profileImage: image,
+      heroDescription,
+      aboutBio: bio,
+      aboutCards: cards,
+    }
+    if (resumeEn !== undefined) payload.resumeEn = resumeEn
+    if (resumeId !== undefined) payload.resumeId = resumeId
+
     const res = await fetch('/api/profile', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ profileImage: image, aboutBio: bio, aboutCards: cards }),
+      body: JSON.stringify(payload),
     })
     if (!res.ok) throw new Error('Failed to update profile')
     await fetchProfile()
@@ -92,7 +119,20 @@ export function AdminDataProvider({ children }: { children: ReactNode }) {
 
   return (
     <AdminDataContext.Provider
-      value={{ projects, profileImage, aboutBio, aboutCards, isLoading, addProject, updateProject, deleteProject, updateProfile }}
+      value={{
+        projects,
+        profileImage,
+        heroDescription,
+        aboutBio,
+        aboutCards,
+        hasResumeEn,
+        hasResumeId,
+        isLoading,
+        addProject,
+        updateProject,
+        deleteProject,
+        updateProfile,
+      }}
     >
       {children}
     </AdminDataContext.Provider>
